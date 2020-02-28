@@ -6,10 +6,24 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\UserRepository;
+use App\UserUpdatedReposirory;
 
 class UserController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -39,8 +53,11 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request, UserRepository $userRepository)
     {
+
+       
+
         // Se utiliza el principio de responsabilidad única del patron de diseño S.O.L.I.D
-        $userRepository->create($request);
+        $userRepository->create($request->all());
         
         return redirect('users')->with('status', 'Profile created!');
     }
@@ -64,7 +81,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $model = User::find($id);
+        
+        return view('users.edit',compact('model'));
     }
 
     /**
@@ -75,9 +94,12 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     /* User $user = findOrFail*/
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, UserUpdatedReposirory $userUpdatedReposirory)
     {
-        //
+        
+        return $userUpdatedReposirory->update($request->all());
+        
+        return redirect('users')->with('status', 'Profile Updated!');
     }
 
     /**

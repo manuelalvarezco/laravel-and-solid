@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     /*
@@ -20,6 +20,16 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    /**
+     * Validación de usuarios activos.
+     *
+     * @var boolean
+     */
+    protected function credencials(Request $request){
+        $request['active'] = 1;
+        return $request->only($this->username(),'password','active');
+    }
 
     /**
      * Where to redirect users after login.
